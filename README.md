@@ -55,7 +55,7 @@ assert.equal(b('--big'), 'tile tile--big');
 And, of course, you could add usual classes. Just pass them after block name when create one:
 ```javascript
 const b = bem('tile.col-xs-2.no-mobile');
-assert.equal(b(), 'tile col-xs-2, no-mobile');
+assert.equal(b(), 'tile col-xs-2 no-mobile');
 ```
 ### Elements
 Elements are bricks of your blocks. You could read more about it [here](https://en.bem.info/method/) here.

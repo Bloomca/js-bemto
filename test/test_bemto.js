@@ -6,7 +6,7 @@ const assert = chai.assert;
 // I prefer mirrored separators
 useSeparators({ element: '--', modifier: '__' });
 
-suite('selector', () => {
+suite('class names', () => {
   test('basic class parsing', () => {
     const [ name, mods, classes ] = parseClasses('title__big.main');
 
