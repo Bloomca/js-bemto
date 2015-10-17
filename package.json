@@ -1,0 +1,38 @@
+{
+  "name": "js-bemto",
+  "version": "1.0.0",
+  "description": "elegant way to write class names in bem style in js (inspired by bemto mixins for jade)",
+  "main": "lib/index.js",
+  "jsnext:main": "src/index.js",
+  "scripts": {
+    "compile": "babel -d lib/ src/",
+    "prepublish": "npm run compile",
+    "lint": "eslint src test",
+    "test": "NODE_ENV=test mocha --compilers js:babel/register --recursive",
+    "test:cov": "babel-node ./node_modules/.bin/isparta cover ./node_modules/.bin/_mocha -- --recursive"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bloomca/js-bemto.git"
+  },
+  "keywords": [
+    "bem",
+    "js",
+    "classes"
+  ],
+  "author": "Seva Zaikov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Bloomca/js-bemto/issues"
+  },
+  "homepage": "https://github.com/Bloomca/js-bemto#readme",
+  "devDependencies": {
+    "babel": "^5.8.23",
+    "babel-eslint": "^4.1.3",
+    "chai": "^3.3.0",
+    "eslint": "^1.7.1",
+    "eslint-config-airbnb": "^0.1.0",
+    "eslint-plugin-react": "^3.5.1",
+    "mocha": "^2.3.3"
+  }
+}
