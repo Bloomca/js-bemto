@@ -99,4 +99,8 @@ this will turn into:
 </div>
 ```
 
+If you will render this component very often, it could make sense to put it in component closure, though you lose creating new class names in runtime. In case of static components it isn't a problem, so you could try it.
+
+And you could use this approach with other frameworks as well, for instance, you could expose it in your knockout components as well.
+
 This library was inspired by [bemto](https://github.com/kizu/bemto) jade mixins.
