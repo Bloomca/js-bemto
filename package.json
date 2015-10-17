@@ -1,13 +1,19 @@
 {
   "name": "js-bemto",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "elegant way to write class names in bem style in js (inspired by bemto mixins for jade)",
   "main": "lib/index.js",
   "jsnext:main": "src/index.js",
+  "files": [
+    "lib",
+    "src",
+    "README.md",
+    "package.json"
+  ],
   "scripts": {
     "compile": "babel -d lib/ src/",
-    "prepublish": "npm run compile",
     "lint": "eslint src test",
+    "prepublish": "npm run compile",
     "test": "NODE_ENV=test mocha --compilers js:babel/register --recursive",
     "test:cov": "babel-node ./node_modules/.bin/isparta cover ./node_modules/.bin/_mocha -- --recursive"
   },
