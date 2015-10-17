@@ -1,4 +1,5 @@
 # JS-BEMTO
+[![Build Status](https://travis-ci.org/Bloomca/js-bemto.svg?branch=master)](https://travis-ci.org/Bloomca/js-bemto)
 
 Very simple and elegant way to write bem classes inside js.
 
