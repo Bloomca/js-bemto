@@ -5,10 +5,12 @@ Very simple and elegant way to write bem classes inside js.
 
 ```javascript
 import bem from 'js-bemto';
-const b = bem('tile--big');
+const isActive = false;
+const isBright = true;
+const b = bem(`tile--big.--active?${isActive}.--bright?${isBright}`);
 const e = b;
 
-assert.equal(b(), 'tile tile--big');
+assert.equal(b(), 'tile tile--big tile--bright');
 assert.equal(e('logo--active.col-xs-2'), 'tile__logo tile__logo--active col-xs-2');
 ```
 
@@ -17,7 +19,8 @@ assert.equal(e('logo--active.col-xs-2'), 'tile__logo tile__logo--active col-xs-2
 1. [Install](#install)
 2. [Settings](#settings)
 3. [Overview](#overview)
-4. [Usage](#usage)
+4. [Conditional Classes](#conditional-classes)
+5. [Usage](#usage)
 
 ## Install
 it is a common npm module. Works both for node and browser (for tools like [browserify](http://browserify.org/) and [webpack](https://webpack.github.io/))
@@ -74,6 +77,49 @@ const b = bem('tile--big.--active');
 
 assert.equal(b(), 'tile tile--big tile--active');
 ```
+
+## Conditional Classes
+There are two options to use arbitrary classes – string inlining or object notation.
+String is very intuitive – just pass *?* mark after your class and then *true* of *false* string.
+Combining with es6 syntax it is very easy:
+```javascript
+const b = bem('tile');
+
+const isActive = false;
+const isDark = true;
+assert.equal(b(`--active?${isActive}.--dark?${isDark}`), 'tile tile--dark');
+```
+
+Of course, it isn't great idea to put too much modifiers in a row, so you could object notation:
+```javascript
+const b = bem('tile');
+
+const isActive = true;
+const isDark = false;
+assert.equal(b({
+  '--active': isActive,
+  '--dark': isDark
+}), 'tile tile--dark')
+```
+
+If you want to create element, just pass it as a first class name inside string or as '&element' key in object notation. And you could usual classes with conditions too:
+```javascript
+const b = bem('tile');
+const e = b;
+
+const isActive = true;
+const isHidden = true;
+assert.equal(e(`title.__active?${isActive}.hidden${isHidden}`),
+  'tile__title tile__title--active hidden');
+assert.equal(e({
+  '&element': 'title',
+  '-active': isActive,
+  'hidden': isHidden
+}), 'tile__title tile__title--active hidden');
+```
+
+You can't use both options when you actually create block (when invoking *bem*).
+
 ## Usage
 The goal of this library to minimize pain (mostly for react.js and it's jsx, but it could be applied to any classes which are generated from js). You could simple change one letter in initializing and all your block and elements would correspond!
 
