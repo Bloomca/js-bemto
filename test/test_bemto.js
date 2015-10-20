@@ -8,7 +8,7 @@ useSeparators({ element: '--', modifier: '__' });
 
 suite('class names', () => {
   test('basic class parsing', () => {
-    const [ name, mods, classes ] = parseClasses('title__big.main');
+    const [ name, mods, classes ] = parseClasses('title__big.main'.split('.'));
 
     assert.equal(name, 'title');
     assert.deepEqual(mods, ['big']);
@@ -53,4 +53,61 @@ suite('class names', () => {
     assert.equal(b().trim(), 'tile tile__big tile__active');
     assert.equal(el.trim(), 'tile--logo tile--logo__active tile--logo__small');
   });
+
+  test('should treat empty classes correctly – several dots in a row', () => {
+    const b = bem('tile');
+
+    assert.equal(b('.__active..__dark').trim(), 'tile tile__active tile__dark');
+  });
+});
+
+suite('conditional class names', () => {
+  test('should parse ? correctly', () => {
+    const b = bem('tile');
+
+    assert.equal(b('title.__active?true.__dark?false').trim(),
+      'tile--title tile--title__active');
+  });
+
+  test('should treat first false conditional name correctly', () => {
+    const b = bem('tile');
+
+    assert.equal(b('__active?false.__dark?true').trim(),
+      'tile tile__dark');
+  });
+
+  test('should parse object notation correctly for block', () => {
+    const b = bem('tile');
+
+    assert.equal(b({
+      '__active': true,
+      '__dark': true,
+      '__highlighted': false
+    }).trim(), 'tile tile__active tile__dark');
+  });
+
+  test('should parse object notation for elements correctly', () => {
+    const b = bem('tile');
+
+    assert.equal(b({
+      '&element': 'title',
+      '__active': true,
+      '__dark': false
+    }).trim(), 'tile--title tile--title__active');
+  });
+
+  test('should consider usual classes optionally too with string notation', () => {
+    const b = bem('tile');
+
+    const isHidden = true;
+    const isDark = false;
+    assert.equal(b(`__active.hidden?${isHidden}.dark?${isDark}`).trim(),
+      'tile tile__active hidden');
+  });
+
+  // test('should parse ? marks in block declaration', () => {
+  //   const b = bem('tile.__active?false.__dark?true');
+  //
+  //   assert.equal(b().trim(), 'tile tile__dark');
+  // });
 });

@@ -25,12 +25,10 @@ function parseWithoutEntity(classList) {
 /**
  * parsing with block/element distinction
  *
- * @param {string} classList – list of all classes in bem-to notation
+ * @param {array} classList – list of all classes in bem-to notation
  * @returns {array} – tuple of entity name, modifiers and usual classes
  */
-export function parseClasses(classList) {
-  const classes = classList.split('.');
-
+export function parseClasses(classes) {
   const entityWithModifier = classes[0].split(modifierSeparator);
   const entityName = entityWithModifier[0];
   const entityModifiers = entityWithModifier[1] ? [ entityWithModifier[1] ] : [];
@@ -57,7 +55,7 @@ function createClassName({ block, element, mods, classes }) {
 export default function bem(block) {
   if (typeof block !== 'string') throw new Error('you should provide string for block creating');
 
-  const [ blockName, mods, usualClasses ] = parseClasses(block);
+  const [ blockName, mods, usualClasses ] = parseClasses(block.split('.'));
 
   /**
    * Actual constructor of classNames
@@ -67,15 +65,44 @@ export default function bem(block) {
    */
   return function bemto(classes) {
     if (typeof classes === 'string') {
+      const classList = classes
+        .split('.')
+        .map(className => {
+          const list = className.split('?');
+          const isActive = list[1] === 'true' || list[1] === undefined;
+
+          return isActive ? list[0] : '';
+        })
+        .filter(className => className !== '');
       if (classes.startsWith(modifierSeparator)) {
         // if we start with modifier separator, it means that it's a block with amends
-        const [ newMods, newClasses ] = parseWithoutEntity(classes.split('.'));
+        const [ newMods, newClasses ] = parseWithoutEntity(classList);
         return createClassName({ block: blockName, mods: mods.concat(newMods), classes: usualClasses.concat(newClasses)});
       } else {
         // this is a usual case for an element return
-        const [ elementName, mods, usualClasses ] = parseClasses(classes);
+        const [ elementName, mods, usualClasses ] = parseClasses(classList);
         return createClassName({ block: blockName, element: elementName, mods, classes: usualClasses });
       }
+    } else if (typeof classes === 'object') {
+      const res = Object.keys(classes).reduce((hash, key) => {
+        if (key === '&element') {
+          hash.element = classes[key];
+        } else if (classes[key]) {
+          if (key.startsWith(modifierSeparator)) {
+            hash.mods = hash.mods.concat(key.slice(modifierSeparator.length));
+          } else {
+            hash.classes = hash.classes.concat(key);
+          }
+        }
+        return hash;
+      }, { block: blockName, classes: [], mods: [] });
+
+      if (!res.element) {
+        res.classes = res.classes.concat(usualClasses);
+        res.mods = res.mods.concat(mods);
+      }
+
+      return createClassName(res);
     } else {
       // if we are here, it means that we should return block
       return createClassName({ block: blockName, mods, classes: usualClasses });
