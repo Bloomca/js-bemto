@@ -74,7 +74,10 @@ export default function bem(block) {
           return isActive ? list[0] : '';
         })
         .filter(className => className !== '');
-      if (classes.startsWith(modifierSeparator)) {
+      if (!classList.length) {
+        // if we are here, no classes at all were resolved
+        return createClassName({ block: blockName, mods, classes: usualClasses });
+      } else if (classes.startsWith(modifierSeparator)) {
         // if we start with modifier separator, it means that it's a block with amends
         const [ newMods, newClasses ] = parseWithoutEntity(classList);
         return createClassName({ block: blockName, mods: mods.concat(newMods), classes: usualClasses.concat(newClasses)});

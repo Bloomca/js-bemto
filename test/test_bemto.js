@@ -105,9 +105,17 @@ suite('conditional class names', () => {
       'tile tile__active hidden');
   });
 
-  // test('should parse ? marks in block declaration', () => {
-  //   const b = bem('tile.__active?false.__dark?true');
-  //
-  //   assert.equal(b().trim(), 'tile tile__dark');
-  // });
+  test('should parse empty strings only with dots correctly', () => {
+    const b = bem('tooltip');
+    const isActive = false;
+    const isPast = false;
+    const isDark = false;
+
+    const text = `${isActive ? '__active' : ''}.` +
+    `${isPast   ? '__past'   : '' }.` +
+    `${isDark   ? '__dark'   : '' }`;
+
+    const eventAnnounceClassName = b(text);
+    assert.equal(eventAnnounceClassName.trim(), 'tooltip');
+  });
 });
